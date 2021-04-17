@@ -6,7 +6,9 @@ pygame.init()
 pygame.mixer.init()
 
 game_folder = os.path.dirname(__file__)
-img_folder = os.path.join(game_folder, 'resources/sprites')
+resources_folder = game_folder + '/../resources'
+img_folder = os.path.join(resources_folder, 'sprites')
+fonts_folder = os.path.join(resources_folder, 'fonts')
 logo_img = pygame.image.load(os.path.join(img_folder, 'MIPT.png'))
 background_img = pygame.image.load(os.path.join(img_folder, 'background.jpg'))
 
@@ -24,7 +26,7 @@ SCREEN_COLOR = WHITE
 BUTTON_COLOR = BLUE
 FONT_COLOR = BLACK
 
-FONT = pygame.font.Font('resources/fonts/Font.ttf', int(HEIGHT / 40))
+FONT = pygame.font.Font(fonts_folder + '/Font.ttf', int(HEIGHT / 40))
 
 SCORE = 0
 BOOSTER = 1
@@ -57,7 +59,7 @@ class Button(pygame.sprite.Sprite):
         self.image.fill(BUTTON_COLOR)
         self.rect = self.image.get_rect()
         self.rect.center = position
-        self.font = pygame.font.Font('resources/fonts/Font.ttf', int(HEIGHT / 20))
+        self.font = pygame.font.Font(fonts_folder + '/Font.ttf', int(HEIGHT / 20))
 
     def draw(self, surface):
         pygame.draw.rect(surface, BLUE, self.rect, 0)
@@ -107,7 +109,7 @@ class Upgrade(Button):
             self.price *= 1.2
             self.price = int(self.price)
 
-    def check_if_avialable(self):
+    def check_if_available(self):
         if self.price <= SCORE:
             self.color = BLUE
             return True
@@ -156,16 +158,16 @@ class Game:
         pygame.display.set_caption("MIPT clicker")
         self.clock = pygame.time.Clock()
         self.running = True
-        self.score = 0
         self.logo = Logo((WIDTH / 10, 23 * HEIGHT / 24))
         self.background = Background((WIDTH / 2, HEIGHT / 2))
-        self.font = pygame.font.Font('resources/fonts/Font.ttf', 20)
-        self.font2 = pygame.font.Font('resources/fonts/Font.ttf', 40)
+        self.font = pygame.font.Font(fonts_folder + '/Font.ttf', 20)
+        self.font2 = pygame.font.Font(fonts_folder + '/Font.ttf', 40)
         self.upgrades = UPGRADES
         self.menu_running = True
         self.menu_buttons = MAIN_MENU
         self.settings_running = True
         self.settings_buttons = SETTINGS
+        self.prev_tick = 0
 
     def render_main(self):
         SCREEN.fill(SCREEN_COLOR)
@@ -173,11 +175,11 @@ class Game:
         SCREEN.blit(self.logo.image, self.logo.rect)
         for i in self.upgrades:
             i.draw(SCREEN)
-            i.check_if_avialable()
+            i.check_if_available()
         global SCORE
         text1 = self.font.render("Current score " + str(SCORE), True, FONT_COLOR)
-        text_upgr_1 = self.font.render("Price   Points per Click", True, FONT_COLOR)
-        text_upgr_2 = self.font.render("Price   Points per Tick", True, FONT_COLOR)
+        text_upgr_1 = self.font.render("Price   Points per CLICK", True, FONT_COLOR)
+        text_upgr_2 = self.font.render("Price   Points per SEC", True, FONT_COLOR)
         SCREEN.blit(text1, (5 * WIDTH / 8, 11 * HEIGHT / 12))
         SCREEN.blit(text_upgr_1, (WIDTH / 5, HEIGHT / 20))
         SCREEN.blit(text_upgr_2, (5 * WIDTH / 7, HEIGHT / 20))
@@ -226,14 +228,14 @@ class Game:
     def change_screen_size(self):
         global FONT
         initiate_buttons()
-        FONT = pygame.font.Font('resources/fonts/Font.ttf', int(HEIGHT / 40))
+        FONT = pygame.font.Font(fonts_folder + '/Font.ttf', int(HEIGHT / 40))
         self.upgrades = UPGRADES
         self.settings_buttons = SETTINGS
         self.menu_buttons = MAIN_MENU
         self.logo = Logo((WIDTH / 10, 23 * HEIGHT / 24))
         self.background = Background((WIDTH / 2, HEIGHT / 2))
-        self.font = pygame.font.Font('resources/fonts/Font.ttf', int(WIDTH / 40))
-        self.font2 = pygame.font.Font('resources/fonts/Font.ttf', int(WIDTH / 20))
+        self.font = pygame.font.Font(fonts_folder + '/Font.ttf', int(WIDTH / 40))
+        self.font2 = pygame.font.Font(fonts_folder + '/Font.ttf', int(WIDTH / 20))
 
     def check_settings_event(self):
         for event in pygame.event.get():
@@ -263,8 +265,9 @@ class Game:
     def check_events(self):
         global SCORE
         global AUTO_CLICKS
-        if pygame.time.get_ticks() % 2 == 0:
+        if pygame.time.get_ticks() - self.prev_tick >= 1000:
             SCORE += AUTO_CLICKS
+            self.prev_tick = pygame.time.get_ticks()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
