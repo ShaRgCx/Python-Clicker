@@ -1,7 +1,7 @@
 #!/bin/python3
 import pygame
 import os
-from dollar import *
+from src import dollar
 
 pygame.init()
 pygame.mixer.init()
@@ -81,13 +81,13 @@ class CurrencyButton(Button):
         self.text = text
         self.color = GREEN
         self.border_color = BLACK
-        self.exchange_rate = int(get_currency_price())
+        self.exchange_rate = int(dollar.get_currency_price())
         self.last_time = pygame.time.get_ticks()
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect, 0)
         pygame.draw.rect(surface, self.border_color, self.rect, 2)
-        if pygame.time.get_ticks() - self.last_time >= 10000:
+        if pygame.time.get_ticks() - self.last_time >= 100000:
             self.update_exchange_rate()
             self.last_time = pygame.time.get_ticks()
         text_surface = FONT.render("Обменять по курсу: $1 = " + str(self.exchange_rate) + "RUB", False, FONT_COLOR)
@@ -103,7 +103,7 @@ class CurrencyButton(Button):
             DOLLAR_SCORE = 0
 
     def update_exchange_rate(self):
-        self.exchange_rate = int(get_currency_price())
+        self.exchange_rate = int(dollar.get_currency_price())
 
 
 class UpgradeCPS(Button):
@@ -222,7 +222,7 @@ def initiate_buttons():
                 Button((2 * WIDTH / 3, 2 * HEIGHT / 3), "1200 x 900", (WIDTH / 4, HEIGHT / 6)),
                 Button((WIDTH / 3, HEIGHT / 3), "Back", (WIDTH / 4, HEIGHT / 6))]
 
-    CURRENCY = [CurrencyButton((WIDTH / 2, HEIGHT / 16), "", (WIDTH * 3 / 8, HEIGHT / 12))]
+    CURRENCY = [CurrencyButton((31 * WIDTH / 60, HEIGHT / 16), "", (WIDTH * 3 / 8, HEIGHT / 12))]
 
 
 initiate_buttons()
@@ -263,9 +263,9 @@ class Game:
         text_score_rub = self.font.render("Your wallet:  " + str(RUB_SCORE) + "RUB", True, FONT_COLOR)
         text_upgr_1 = self.font.render("$ per CLICK: " + str(BOOSTER), True, FONT_COLOR)
         text_upgr_2 = self.font.render("$ per SEC: " + str(AUTO_CLICKS), True, FONT_COLOR)
-        SCREEN.blit(text_score_dollar, (5 * WIDTH / 8, 11 * HEIGHT / 12))
-        SCREEN.blit(text_score_rub, (2 * WIDTH / 8, 11 * HEIGHT / 12))
-        SCREEN.blit(text_upgr_1, (WIDTH / 14, HEIGHT / 20))
+        SCREEN.blit(text_score_dollar, (3 * WIDTH / 4, 11 * HEIGHT / 12))
+        SCREEN.blit(text_score_rub, (WIDTH / 4, 11 * HEIGHT / 12))
+        SCREEN.blit(text_upgr_1, (WIDTH / 20, HEIGHT / 20))
         SCREEN.blit(text_upgr_2, (10 * WIDTH / 14, HEIGHT / 20))
         pygame.display.flip()
 
