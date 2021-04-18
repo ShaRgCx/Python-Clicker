@@ -1,10 +1,12 @@
 import unittest
 from src import clicker
 
+
 def back_to_default():
     clicker.SCORE = 0
     clicker.BOOSTER = 1
     clicker.AUTO_CLICKS = 0
+
 
 class SimpleUpgradeTest(unittest.TestCase):
     upgrade_button1 = clicker.Upgrade((200, 200), "text", 100, 100, (100, 100))
