@@ -2,8 +2,8 @@ import unittest
 from src.clicker import *
 
 VALUE = 100
-PARAM = [(100, 100), "text", 100, 100, (100, 100)]
-PARAM_CURRENCY = [(100, 100), "text", (100, 100)]
+PARAM = [(100, 100), "text", 100, 100, (100, 100), 100]
+PARAM_CURRENCY = [(100, 100), "text", (100, 100), 100]
 
 
 class SimpleUpgradeTest(unittest.TestCase):

@@ -12,4 +12,4 @@ def get_currency_price():
 
     convert = soup.findAll("span", {"class": "DFlfde", "class": "SwHCTb", "data-precision": 2})
     currency = float(convert[0].text.replace(",", "."))
-    return currency
+    return int(currency)
