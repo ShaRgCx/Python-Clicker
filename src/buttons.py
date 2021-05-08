@@ -29,28 +29,22 @@ class CurrencyButton(Button):
         self.text = text
         self.color = GREEN
         self.border_color = BLACK
-        self.exchange_rate = int(get_currency_price())
+        self.currency = Currency()
         self.last_time = pygame.time.get_ticks()
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect, 0)
         pygame.draw.rect(surface, self.border_color, self.rect, 2)
-        if pygame.time.get_ticks() - self.last_time >= 5000:
-            self.update_exchange_rate()
-            self.last_time = pygame.time.get_ticks()
-        text_surface = FONT.render("Обменять по курсу: $1 = " + str(self.exchange_rate) + "RUB", False, FONT_COLOR)
+        text_surface = FONT.render("Обменять по курсу: $1 = " + str(self.currency.get_exchange_rate()) + "RUB", False, FONT_COLOR)
         text_rect = text_surface.get_rect()
         text_rect.topleft = (self.rect.left + 10, self.rect.top + self.rect.height * 0.25)
         surface.blit(text_surface, text_rect)
 
     def click(self, rub_score, dollar_score):
         if dollar_score > 0:
-            rub_score += dollar_score * self.exchange_rate
+            rub_score += dollar_score * self.currency.get_exchange_rate()
             dollar_score = 0
         return rub_score, dollar_score
-
-    def update_exchange_rate(self):
-        self.exchange_rate = int(get_currency_price())
 
 
 # CPS means Clicks per second
