@@ -7,9 +7,12 @@ PARAM_CURRENCY = [(100, 100), "text", (100, 100), 100]
 
 
 class SimpleUpgradeTest(unittest.TestCase):
-    upgrade_cpc = UpgradeCPC(*PARAM)
-    upgrade_cps = UpgradeCPS(*PARAM)
-    currency = CurrencyButton(*PARAM_CURRENCY)
+
+    def setUp(self) -> None:
+        self.upgrade_cpc = UpgradeCPC(*PARAM)
+        self.upgrade_cps = UpgradeCPS(*PARAM)
+        self.currency = CurrencyButton(*PARAM_CURRENCY)
+        self.exchange = Currency()
 
     def test_click(self):
         self.assertEqual(self.upgrade_cpc.click(0, 0), (0, 0))
@@ -26,7 +29,7 @@ class SimpleUpgradeTest(unittest.TestCase):
         self.assertTrue(self.upgrade_cpc.check_if_available(VALUE))
 
     def test_currency(self):
-        self.assertEqual(self.currency.click(0, VALUE), (VALUE * get_currency_price(), 0))
+        self.assertEqual(self.currency.click(0, VALUE), (VALUE * self.exchange.get_exchange_rate(), 0))
 
 
 if __name__ == '__main__':
